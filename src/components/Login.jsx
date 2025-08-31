@@ -8,6 +8,7 @@ import { BASE_URL } from '../utils/constants'
 const Login = () => {
     const [emailId,setEmail]=useState("user@gmail.com")
     const [password,setPassword]=useState("User@123")
+    const [error,setError]=useState("")
     const dispatch=useDispatch()
     const navigate=useNavigate()
     const handleLogin=async ()=>{
@@ -21,7 +22,7 @@ const Login = () => {
             navigate('/')
            
         } catch (error) {
-            console.log(error);
+            setError(error?.response?.data||"Something went wrong")
         }
     }
     return (
@@ -75,7 +76,7 @@ const Login = () => {
                         Must be more than 8 characters, including
                         <br />At least one number <br />At least one lowercase letter <br />At least one uppercase letter
                     </p>
-
+                    <p className='text-red-400'>{error}</p>
                     <div className="card-actions justify-center">
                         <button className="btn" onClick={handleLogin}>Login</button>
                     </div>
