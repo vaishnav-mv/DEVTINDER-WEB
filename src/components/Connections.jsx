@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addConnections } from '../utils/connectionSlice'
 
 const Connections = () => {
-  const connections = useSelector(store => store.connection)
+  const connections = useSelector(store => store.connections)
   const dispatch = useDispatch()
   const fetchConnections = async () => {
 
@@ -17,6 +17,7 @@ const Connections = () => {
       console.log(res.data.data)
       dispatch(addConnections(res.data.data))
     } catch (error) {
+      console.log(error);
 
     }
   }
@@ -33,7 +34,7 @@ const Connections = () => {
     {/* Responsive grid layout */}
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center">
       {connections.map((connection, index) => (
-        <UserCard key={index} user={connection} showActions={false} />
+        <UserCard key={index} user={connection} type="connection" />
       ))}
     </div>
   </div>

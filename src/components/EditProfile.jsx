@@ -11,6 +11,7 @@ const EditProfile = ({ user }) => {
     const [age, setAge] = useState(user.age)
     const [gender, setGender] = useState(user.gender)
     const [about, setAbout] = useState(user.about)
+    const [photoUrl,setPhotoUrl]=useState(user.photoUrl)
     const [error, setError] = useState("")
     const [success,setSuccess]=useState("")
 
@@ -106,7 +107,7 @@ const EditProfile = ({ user }) => {
                     </div>
                 </div>
             </div>
-            <UserCard user={{firstName,lastName,age,gender,about}}></UserCard>
+            <UserCard user={{firstName,lastName,age,gender,about,photoUrl}}></UserCard>
         </div>
 
 
