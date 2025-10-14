@@ -10,15 +10,12 @@ const Navbar = () => {
   const navigate=useNavigate()
   const handleLogout = async () => {
     try {
-      await axios.post(BASE_URL + "/logout", {}, { withCredentials: true })
-      dispatch(removeUser())
-      navigate("/login")
-
-    } catch (error) {
-      //redirect to error page
-      console.log(error);
-
-    }
+    await axios.post(BASE_URL + "/logout", {}, { withCredentials: true });
+    dispatch({ type: "LOGOUT_RESET" }); // ✅ clear all slices at once
+    navigate("/login");
+  } catch (error) {
+    console.log(error);
+  }
   }
   return (
     <div className="navbar bg-base-100 shadow-sm">

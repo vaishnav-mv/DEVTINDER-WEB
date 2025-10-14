@@ -1,16 +1,27 @@
-import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "./userSlice"
-import feedReducer from "./feedSlice"
-import connectionReducer from '../utils/connectionSlice'
-import requestReducer from "../utils/requestSlice"
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import userReducer from "./userSlice";
+import feedReducer from "./feedSlice";
+import connectionReducer from "../utils/connectionSlice";
+import requestReducer from "../utils/requestSlice";
 
-const appStore=configureStore({
-    reducer:{
-        user:userReducer,
-        feed:feedReducer,
-        connections:connectionReducer,
-        requests:requestReducer
-    }
-})
+// Combine all reducers
+const appReducer = combineReducers({
+  user: userReducer,
+  feed: feedReducer,
+  connections: connectionReducer,
+  requests: requestReducer,
+});
 
-export default appStore
+// ✅ Root reducer with reset logic
+const rootReducer = (state, action) => {
+  if (action.type === "LOGOUT_RESET") {
+    state = undefined; // Clears all slices
+  }
+  return appReducer(state, action);
+};
+
+const appStore = configureStore({
+  reducer: rootReducer,
+});
+
+export default appStore;

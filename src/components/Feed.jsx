@@ -23,9 +23,15 @@ const Feed = () => {
   useEffect(()=>{
     getFeed()
   },[])
-  return feed&&(
-    <div className='flex justify-center my-10'>
-      <UserCard user={feed?.data[0]} type="feed"></UserCard>
+  return (
+    <div className='flex flex-col items-center my-10 min-h-[80vh]'>
+      {!feed ? (
+        <p className="text-gray-500">Loading feed...</p>
+      ) : feed.data?.length === 0 ? (
+        <p className="text-gray-600 text-lg">No more users to display 👀</p>
+      ) : (
+        <UserCard user={feed.data[0]} type="feed" />
+      )}
     </div>
   )
 }
