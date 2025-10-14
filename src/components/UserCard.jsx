@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
+import { useDispatch } from "react-redux";
+import { removeRequest } from "../utils/requestSlice";
+import { removeFeedUser } from "../utils/feedSlice";
 
 const UserCard = ({ user, type = "feed" }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [message, setMessage] = useState("");
+  const dispatch=useDispatch()
 
   // Extract correct user info
   const userData = user?.fromUserId ? user.fromUserId : user;
@@ -32,6 +36,8 @@ const UserCard = ({ user, type = "feed" }) => {
           );
           successMessage = `You rejected ${firstName}'s request ❌`;
         }
+        dispatch(removeRequest(requestId))
+
       } else if (type === "feed") {
         if (action === "interested") {
           await axios.post(
@@ -48,6 +54,7 @@ const UserCard = ({ user, type = "feed" }) => {
           );
           successMessage = `You ignored ${firstName} 🙈`;
         }
+        dispatch(removeFeedUser())
       }
 
       // ✅ Smoothly hide card
