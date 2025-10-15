@@ -7,14 +7,12 @@ const feedSlice = createSlice({
         addFeed: (state, action) => {
             return action.payload
         },
-        removeFeedUser: (state) => {
-            if (!state || !state.data) return null;
-            // remove the first user (you show only one card at a time)
-            return { ...state, data: state.data.slice(1) };
+        removeFeedUser: (state, action) => {
+            state.data = state.data.filter(user => user._id !== action.payload);
         },
         clearFeed: () => null
     }
 })
 
-export const { addFeed,removeFeedUser,clearFeed} = feedSlice.actions
+export const { addFeed, removeFeedUser, clearFeed } = feedSlice.actions
 export default feedSlice.reducer

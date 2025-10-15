@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
@@ -6,20 +6,14 @@ import { removeRequest } from "../utils/requestSlice";
 import { removeFeedUser } from "../utils/feedSlice";
 
 const UserCard = ({ user, type = "feed" }) => {
-  const [isVisible, setIsVisible] = useState(true);
-  const [message, setMessage] = useState("");
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
 
-  // Extract correct user info
   const userData = user?.fromUserId ? user.fromUserId : user;
   const requestId = user?._id;
   const { firstName, lastName, photoUrl, age, gender, about } = userData;
 
-  // Handle button actions
   const handleAction = async (action) => {
     try {
-      let successMessage = "";
-
       if (type === "request" && requestId) {
         if (action === "accept") {
           await axios.post(
@@ -27,17 +21,14 @@ const UserCard = ({ user, type = "feed" }) => {
             {},
             { withCredentials: true }
           );
-          successMessage = `You accepted ${firstName}'s request ✅`;
         } else if (action === "reject") {
           await axios.post(
             `${BASE_URL}/request/review/rejected/${requestId}`,
             {},
             { withCredentials: true }
           );
-          successMessage = `You rejected ${firstName}'s request ❌`;
         }
-        dispatch(removeRequest(requestId))
-
+        dispatch(removeRequest(requestId));
       } else if (type === "feed") {
         if (action === "interested") {
           await axios.post(
@@ -45,44 +36,20 @@ const UserCard = ({ user, type = "feed" }) => {
             {},
             { withCredentials: true }
           );
-          successMessage = `You showed interest in ${firstName} 💛`;
         } else if (action === "ignore") {
           await axios.post(
             `${BASE_URL}/request/send/ignored/${userData._id}`,
             {},
             { withCredentials: true }
           );
-          successMessage = `You ignored ${firstName} 🙈`;
         }
-        dispatch(removeFeedUser())
+        // ✅ Remove from Redux feed immediately
+        dispatch(removeFeedUser(userData._id));
       }
-
-      // ✅ Smoothly hide card
-      setIsVisible(false);
-      setMessage(successMessage);
-
-      // Auto-hide message after 2s
-      setTimeout(() => setMessage(""), 2000);
-
-      console.log(`Action ${action} done for`, userData.firstName);
     } catch (error) {
       console.error(`Error performing ${action}:`, error);
-      setMessage("Something went wrong. Please try again.");
-      setTimeout(() => setMessage(""), 2000);
     }
   };
-
-  // If message exists and card hidden — show only message
-  if (!isVisible && message) {
-    return (
-      <div className="text-center text-lg font-medium text-gray-700 my-10 animate-fade">
-        {message}
-      </div>
-    );
-  }
-
-  // If card is hidden and message expired, render nothing
-  if (!isVisible) return null;
 
   return (
     <div className="card bg-base-300 w-80 shadow-md rounded-2xl overflow-hidden m-4 hover:scale-105 transition-transform duration-200 animate-fade">
@@ -105,7 +72,6 @@ const UserCard = ({ user, type = "feed" }) => {
         )}
         {about && <p className="text-sm text-gray-700 mt-2">{about}</p>}
 
-        {/* Action Buttons */}
         <div className="card-actions justify-center my-4">
           {type === "feed" && (
             <>
