@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
@@ -105,6 +106,12 @@ const UserCard = ({ user, type = "feed" }) => {
                 Reject
               </button>
             </>
+          )}
+
+          {type === "connection" && (
+            <Link to={"/chat/" + requestId}>
+              <button className="btn btn-primary">Chat</button>
+            </Link>
           )}
         </div>
       </div>
